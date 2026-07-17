@@ -1,0 +1,22 @@
+trigger:
+- main
+
+pool:
+  name: SQA-self-hosted-pool
+
+steps:
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    python -m pytest -v
+  displayName: 'Run Selenium tests'
+  
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'reports/leadpage_status.pdf'
+    ArtifactName: 'QA-Reports'
+    publishLocation: 'Container'
+    condition: always()
